@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>미세먼지 정보 API</title>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<script>
+  var proxy = 'https://cors-anywhere.herokuapp.com/';
+  var url = 
+    'http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMinuDustFrcstDspth';
+  var key = '?ServiceKey=sXxYjidiN3t6GurP%2FlL532W8cmmt4qCl%2F%2BFF72uNIWACqGGmumk6enycmK39NmiGxpmGhhxqFXvWYu4zH8f3zg%3D%3D';
+  var rows = 	'&numOfRows=4'
+  var pageNum = '&pageNo=1';
+  var data = '&searchDate=2021-08-01';
+  var time = '&InformCode=PM10';
+  var type= '&returnType=json'
+  var apiUrl = url + key + rows + pageNum + data + time + type;
+
+  // 프록시 서버를 경유하여 요청(COR문제 해결)
+  const testURL = proxy + apiUrl;
+
+  // axios.get(testURL)
+  // .then(function (res) {
+  //   // handle success
+  //   console.log(res.data);
+  // })
+  // .catch(function (err) {
+  //   // handle error
+  //   console.log(err);
+  // });
+ 
+ fetch(testURL)
+    .then(res => {
+      return res.json();
+    })
+    .then(data => {
+      console.log(data.response.body.items);
+      let _data = data.response.body.items;
+      showData(_data);
+    })
+
+  function showData(data) {
+
+    let html = '';
+
+    data.forEach(item => {
+      html += `
+        <p class="time">${item.informData}</p>
+        <p class="text1">${item.informCause}</p>
+        <p class="text2">${item.informGrade}</p>
+      `
+    })
+
+    document.body.innerHTML = html;
+  }
+
+</script>  
+
+
+</body>
+</html>
